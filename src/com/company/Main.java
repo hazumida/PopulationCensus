@@ -23,14 +23,14 @@ public class Main {
         }
 
         long count = persons.stream()
-                .filter(age -> age.getAge() < 18)
+                .filter(person -> person.getAge() < 18)
                 .count();
         System.out.println(count + "\n");
 
         List<String> conscripts = persons.stream()
-                .filter(sex -> sex.getSex().equals(MAN))
-                .filter(age -> age.getAge() > 17)
-                .filter(age -> age.getAge() < 28)
+                .filter(person -> person.getSex().equals(MAN))
+                .filter(person -> person.getAge() > 17)
+                .filter(person -> person.getAge() < 28)
                 .map(Person::getFamily)
                 .collect(Collectors.toList());
 
@@ -39,28 +39,15 @@ public class Main {
         }
         System.out.println("\n");
 
-        List<Person> man = persons.stream()
-                .filter(education -> education.getEducation().equals(Education.HIGHER))
-                .filter(age -> age.getAge() > 18)
-                .filter(age -> age.getAge() < 65)
-                .filter(sex -> sex.getSex().equals(MAN))
-                .collect(Collectors.toList());
-        List<Person> woman = persons.stream()
-                .filter(education -> education.getEducation().equals(Education.HIGHER))
-                .filter(age -> age.getAge() > 18)
-                .filter(age -> age.getAge() < 60)
-                .filter(sex -> sex.getSex().equals(WOMAN))
-                .collect(Collectors.toList());
-        List<Person> all = new ArrayList<>();;
-        all.addAll(man);
-        all.addAll(woman);
-
-        all = all.stream()
+        List<Person> higher = persons.stream()
+                .filter(person -> person.getEducation().equals(Education.HIGHER))
+                .filter(person -> person.getAge() > 18)
+                .filter(person -> (person.getAge() < 65 && person.getSex().equals(MAN)) || (person.getAge() < 60 && person.getSex().equals(WOMAN)))
                 .sorted(Comparator.comparing(Person::getFamily))
                 .sorted(Comparator.comparing(Person::getName))
                 .collect(Collectors.toList());
 
-        for (Person person : all) {
+        for (Person person : higher) {
             System.out.println(person.toString());
         }
 
